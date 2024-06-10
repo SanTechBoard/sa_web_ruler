@@ -1,0 +1,23 @@
+body{
+    background-color: rgb(15, 15, 15);
+    color: white;
+    height: 100%;
+}
+
+
+h3{
+    font-size: 2rem;
+}
+
+button{
+    color: rgb(37, 35, 35);
+    background-color: rgb(255, 102, 0);
+    border-width: 0.3rem;
+    border-radius: 10px;
+    border-color: rgb(0, 0, 0);
+}
+
+#output{
+    font-size: 8rem;
+    color: rgb(228, 223, 223);
+}
