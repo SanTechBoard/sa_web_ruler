@@ -41,7 +41,7 @@ void setup() {
   esp_now_register_recv_cb(OnDataRecv);
 
   // Add the MAC address of the sender
-  uint8_t senderMacAddress[] = {0x08, 0xD1, 0xF9, 0xED, 0x99, 0xFC};
+  uint8_t senderMacAddress[] = {mac_id};
   memcpy(peerInfo.peer_addr, senderMacAddress, 6);
   peerInfo.channel = 0;
   peerInfo.encrypt = false;
