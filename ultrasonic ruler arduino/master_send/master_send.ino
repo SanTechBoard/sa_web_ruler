@@ -1,15 +1,13 @@
 #include <esp_now.h>
 #include <WiFi.h>
 
-// mymac = 08:D1:F9:ED:99:FC
-// other = 08:D1:F9:E0:FE:24
 
 const int trigPin = 2;
 const int echoPin = 4;
 
 float duration, distance;
 
-uint8_t broadcastAddress[] = {0x08, 0xD1, 0xF9, 0xE0, 0xFE, 0x24}; 
+uint8_t broadcastAddress[] = {mac_id}; 
 typedef struct struct_message {
   char a[32];
   int b;
