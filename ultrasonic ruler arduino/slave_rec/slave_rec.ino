@@ -38,7 +38,7 @@ void setup() {
     return;
   }
 
-  esp_now_register_recv_cb(OnDataRecv);
+  esp_now_register_recv_cb((esp_now_recv_cb_t)OnDataRecv);
 
   // Add the MAC address of the sender
   uint8_t senderMacAddress[] = {mac_id};
