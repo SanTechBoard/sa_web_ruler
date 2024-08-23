@@ -1,7 +1,6 @@
 #include <esp_now.h>
 #include <WiFi.h>
 
-
 const int trigPin = 2;
 const int echoPin = 4;
 
