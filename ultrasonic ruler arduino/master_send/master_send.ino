@@ -1,12 +1,13 @@
 #include <esp_now.h>
 #include <WiFi.h>
+#include "parayaan_pattilla.h"
 
 const int trigPin = 2;
 const int echoPin = 4;
 
 float duration, distance;
 
-uint8_t broadcastAddress[] = {slave_mac}; 
+uint8_t broadcastAddress[6];  // Define an array to hold the broadcast address
 typedef struct struct_message {
   char a[32];
   int b;
@@ -37,6 +38,9 @@ void setup() {
   }
 
   esp_now_register_send_cb(OnDataSent);
+
+  // Copy slave_mac into broadcastAddress
+  memcpy(broadcastAddress, slave_mac, sizeof(slave_mac));
 
   memcpy(peerInfo.peer_addr, broadcastAddress, 6);
   peerInfo.channel = 0;

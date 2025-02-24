@@ -15,16 +15,16 @@ document.addEventListener("DOMContentLoaded", function(){
         const readableStreamClosed = port.readable.pipeTo(textDecoder.writable);
         const reader = textDecoder.readable.getReader();
     
-        // disconnectButton.disabled = false;
         connectButton.disabled = true;
     
         let latestValue = "";
         let lastValue = "";
         let unchangedCount = 0;
-        const unchangedThreshold = 3; // Number of intervals to wait before displaying the signal not found message
-        
+        const unchangedThreshold = 100;
+        let buffer = "";
         
         const updateDisplay = () => {
+            console.log("Buffer content:", buffer);
             console.log(`Latest value: ${latestValue}, Last value: ${lastValue}, Unchanged count: ${unchangedCount}`);
             if (latestValue) {
                 if (latestValue === lastValue) {
@@ -44,19 +44,41 @@ document.addEventListener("DOMContentLoaded", function(){
             }
         };
     
-        const intervalId = setInterval(updateDisplay, 100);
+        const intervalId = setInterval(updateDisplay, 500);
     
         // Listen to data coming from the serial device.
         while (true) {
             const { value, done } = await reader.read();
             if (done) {
-                // Allow the serial port to be closed later.
                 reader.releaseLock();
-                clearInterval(intervalId); // Clear the interval when done reading
+                clearInterval(intervalId);
                 break;
             }
-            // Update the latest value or set it to an empty string if no value is received
-            latestValue = value || "";
+            
+            console.log("Raw serial data:", value);
+            
+            // Concatenate the incoming data to the buffer
+            buffer += value;
+            
+            // Look for complete lines in the buffer
+            let lines = buffer.split('\n');
+            if (lines.length > 1) {
+                // Process all complete lines except the last one
+                for (let i = 0; i < lines.length - 1; i++) {
+                    let line = lines[i].trim();
+                    console.log("Processing line:", line);
+                    
+                    // Simplified regex to match just the number
+                    let match = line.match(/(\d+\.?\d*)/);
+                    if (match) {
+                        latestValue = match[1];
+                        console.log("Successfully parsed value:", latestValue);
+                    } else {
+                        console.log("Failed to match line pattern");
+                    }
+                }
+                buffer = lines[lines.length - 1];
+            }
         }
     });
     

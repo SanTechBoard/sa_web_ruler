@@ -1,5 +1,6 @@
 #include <esp_now.h>
 #include <WiFi.h>
+#include "parayaan_pattilla.h"  // Ensure this file is correct and has no conflicts
 
 // Define a structure to hold the incoming data
 typedef struct struct_message {
@@ -7,7 +8,7 @@ typedef struct struct_message {
   int b;
   float c;
   bool d;
-} struct_message;
+} struct_message;  // Declare the structure type outside of functions
 
 // Create an instance of the structure to hold the received data
 struct_message myData;
@@ -39,14 +40,16 @@ void setup() {
   // Register the receive callback function
   esp_now_register_recv_cb(OnDataRecv);
 
-  // Add the MAC address of the sender
-  uint8_t senderMacAddress[] = {master_mac}; 
-  memset(&peerInfo, 0, sizeof(peerInfo)); // Ensure no garbage values
-  memcpy(peerInfo.peer_addr, senderMacAddress, 6);
-  peerInfo.channel = 0;
-  peerInfo.encrypt = false;
+  // Add the MAC address of the sender (master)
+  uint8_t broadcastAddress[6]; 
+  memcpy(broadcastAddress, master_mac, sizeof(master_mac)); // Copy master_mac to broadcastAddress
 
-  
+  // Initialize peerInfo structure and set the peer address
+  memset(&peerInfo, 0, sizeof(peerInfo)); // Clear previous values
+  memcpy(peerInfo.peer_addr, broadcastAddress, sizeof(broadcastAddress));  // Set peer address to master_mac
+  peerInfo.channel = 0;  // Use default channel
+  peerInfo.encrypt = false;  // No encryption
+
   // Add the peer
   if (esp_now_add_peer(&peerInfo) != ESP_OK) {
     Serial.println("Failed to add peer");
@@ -57,4 +60,3 @@ void setup() {
 void loop() {
   // Nothing to do here, everything is handled by the callback function
 }
-
